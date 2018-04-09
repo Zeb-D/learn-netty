@@ -578,7 +578,291 @@ public String substring(int beginIndex) {
 }
 ```
 
+```java
+public String replace(char oldChar, char newChar) {
+    if (oldChar != newChar) {
+        int len = value.length;
+        int i = -1;
+        char[] val = value; /* avoid getfield opcode */
 
+        while (++i < len) {
+            if (val[i] == oldChar) {
+                break;
+            }
+        }
+        if (i < len) {
+            char buf[] = new char[len];
+            for (int j = 0; j < i; j++) {
+                buf[j] = val[j];
+            }
+            while (i < len) {
+                char c = val[i];
+                buf[i] = (c == oldChar) ? newChar : c;
+                i++;
+            }
+            return new String(buf, true);
+        }
+    }
+    return this;
+}
+```
+
+
+
+```java
+static int indexOf(char[] source, int sourceOffset, int sourceCount,
+        char[] target, int targetOffset, int targetCount,
+        int fromIndex) {
+    if (fromIndex >= sourceCount) {
+        return (targetCount == 0 ? sourceCount : -1);
+    }
+    if (fromIndex < 0) {
+        fromIndex = 0;
+    }
+    if (targetCount == 0) {
+        return fromIndex;
+    }
+
+    char first = target[targetOffset];
+    int max = sourceOffset + (sourceCount - targetCount);
+
+    for (int i = sourceOffset + fromIndex; i <= max; i++) {
+        /* Look for first character. */
+        if (source[i] != first) {
+            while (++i <= max && source[i] != first);
+        }
+
+        /* Found first character, now look at the rest of v2 */
+        if (i <= max) {
+            int j = i + 1;
+            int end = j + targetCount - 1;
+            for (int k = targetOffset + 1; j < end && source[j]
+                    == target[k]; j++, k++);
+
+            if (j == end) {
+                /* Found whole string. */
+                return i - sourceOffset;
+            }
+        }
+    }
+    return -1;
+}
+```
+
+
+
+**使用正则表达式来查找是否存在**
+
+```java
+/**
+ * Tells whether or not this string matches the given <a
+ * href="../util/regex/Pattern.html#sum">regular expression</a>.
+ * <p> An invocation of this method of the form
+ * <i>str</i>{@code .matches(}<i>regex</i>{@code )} yields exactly the
+ * same result as the expression
+ * <blockquote>
+ * {@link java.util.regex.Pattern}.{@link java.util.regex.Pattern#matches(String,CharSequence)
+ * matches(<i>regex</i>, <i>str</i>)}
+ * </blockquote>
+ * @param   regex
+ *          the regular expression to which this string is to be matched
+ * @return  {@code true} if, and only if, this string matches the
+ *          given regular expression
+ * @throws  PatternSyntaxException
+ *          if the regular expression's syntax is invalid
+ * @see java.util.regex.Pattern
+ * @since 1.4
+ * @spec JSR-51
+ */
+public boolean matches(String regex) {
+    return Pattern.matches(regex, this);
+}
+```
+
+```java
+public static boolean matches(String regex, CharSequence input) {
+    Pattern p = Pattern.compile(regex);
+    Matcher m = p.matcher(input);
+    return m.matches();
+}
+```
+
+```java
+public String replaceFirst(String regex, String replacement) {
+    return Pattern.compile(regex).matcher(this).replaceFirst(replacement);
+}
+```
+
+```java
+public String replaceFirst(String replacement) {
+    if (replacement == null)
+        throw new NullPointerException("replacement");
+    reset();
+    if (!find())
+        return text.toString();
+    StringBuffer sb = new StringBuffer();
+    appendReplacement(sb, replacement);
+    appendTail(sb);
+    return sb.toString();
+}
+```
+
+```java
+public String replaceAll(String regex, String replacement) {
+    return Pattern.compile(regex).matcher(this).replaceAll(replacement);
+}
+```
+
+```java
+public String replace(CharSequence target, CharSequence replacement) {
+    return Pattern.compile(target.toString(), Pattern.LITERAL).matcher(
+            this).replaceAll(Matcher.quoteReplacement(replacement.toString()));
+}
+```
+
+
+
+```java
+/**
+ * Splits this string around matches of the given
+ * <a href="../util/regex/Pattern.html#sum">regular expression</a>.
+ *
+ * <p> The array returned by this method contains each substring of this
+ * string that is terminated by another substring that matches the given
+ * expression or is terminated by the end of the string.  The substrings in
+ * the array are in the order in which they occur in this string.  If the
+ * expression does not match any part of the input then the resulting array
+ * has just one element, namely this string.
+ *
+ * <p> When there is a positive-width match at the beginning of this
+ * string then an empty leading substring is included at the beginning
+ * of the resulting array. A zero-width match at the beginning however
+ * never produces such empty leading substring.
+ *
+ * <p> The {@code limit} parameter controls the number of times the
+ * pattern is applied and therefore affects the length of the resulting
+ * array.  If the limit <i>n</i> is greater than zero then the pattern
+ * will be applied at most <i>n</i>&nbsp;-&nbsp;1 times, the array's
+ * length will be no greater than <i>n</i>, and the array's last entry
+ * will contain all input beyond the last matched delimiter.  If <i>n</i>
+ * is non-positive then the pattern will be applied as many times as
+ * possible and the array can have any length.  If <i>n</i> is zero then
+ * the pattern will be applied as many times as possible, the array can
+ * have any length, and trailing empty strings will be discarded.
+ *
+ * <p> The string {@code "boo:and:foo"}, for example, yields the
+ * following results with these parameters:
+ *
+ * <blockquote><table cellpadding=1 cellspacing=0 summary="Split example showing regex, limit, and result">
+ * <tr>
+ *     <th>Regex</th>
+ *     <th>Limit</th>
+ *     <th>Result</th>
+ * </tr>
+ * <tr><td align=center>:</td>
+ *     <td align=center>2</td>
+ *     <td>{@code { "boo", "and:foo" }}</td></tr>
+ * <tr><td align=center>:</td>
+ *     <td align=center>5</td>
+ *     <td>{@code { "boo", "and", "foo" }}</td></tr>
+ * <tr><td align=center>:</td>
+ *     <td align=center>-2</td>
+ *     <td>{@code { "boo", "and", "foo" }}</td></tr>
+ * <tr><td align=center>o</td>
+ *     <td align=center>5</td>
+ *     <td>{@code { "b", "", ":and:f", "", "" }}</td></tr>
+ * <tr><td align=center>o</td>
+ *     <td align=center>-2</td>
+ *     <td>{@code { "b", "", ":and:f", "", "" }}</td></tr>
+ * <tr><td align=center>o</td>
+ *     <td align=center>0</td>
+ *     <td>{@code { "b", "", ":and:f" }}</td></tr>
+ * </table></blockquote>
+ *
+ * <p> An invocation of this method of the form
+ * <i>str.</i>{@code split(}<i>regex</i>{@code ,}&nbsp;<i>n</i>{@code )}
+ * yields the same result as the expression
+ *
+ * <blockquote>
+ * <code>
+ * {@link java.util.regex.Pattern}.{@link
+ * java.util.regex.Pattern#compile compile}(<i>regex</i>).{@link
+ * java.util.regex.Pattern#split(java.lang.CharSequence,int) split}(<i>str</i>,&nbsp;<i>n</i>)
+ * </code>
+ * </blockquote>
+ *
+ *
+ * @param  regex
+ *         the delimiting regular expression
+ *
+ * @param  limit
+ *         the result threshold, as described above
+ *
+ * @return  the array of strings computed by splitting this string
+ *          around matches of the given regular expression
+ *
+ * @throws  PatternSyntaxException
+ *          if the regular expression's syntax is invalid
+ *
+ * @see java.util.regex.Pattern
+ *
+ * @since 1.4
+ * @spec JSR-51
+ */
+public String[] split(String regex, int limit) {
+    /* fastpath if the regex is a
+     (1)one-char String and this character is not one of the
+        RegEx's meta characters ".$|()[{^?*+\\", or
+     (2)two-char String and the first char is the backslash and
+        the second is not the ascii digit or ascii letter.
+     */
+    char ch = 0;
+    if (((regex.value.length == 1 &&
+         ".$|()[{^?*+\\".indexOf(ch = regex.charAt(0)) == -1) ||
+         (regex.length() == 2 &&
+          regex.charAt(0) == '\\' &&
+          (((ch = regex.charAt(1))-'0')|('9'-ch)) < 0 &&
+          ((ch-'a')|('z'-ch)) < 0 &&
+          ((ch-'A')|('Z'-ch)) < 0)) &&
+        (ch < Character.MIN_HIGH_SURROGATE ||
+         ch > Character.MAX_LOW_SURROGATE))
+    {
+        int off = 0;
+        int next = 0;
+        boolean limited = limit > 0;
+        ArrayList<String> list = new ArrayList<>();
+        while ((next = indexOf(ch, off)) != -1) {
+            if (!limited || list.size() < limit - 1) {
+                list.add(substring(off, next));
+                off = next + 1;
+            } else {    // last one
+                //assert (list.size() == limit - 1);
+                list.add(substring(off, value.length));
+                off = value.length;
+                break;
+            }
+        }
+        // If no match was found, return this
+        if (off == 0)
+            return new String[]{this};
+
+        // Add remaining segment
+        if (!limited || list.size() < limit)
+            list.add(substring(off, value.length));
+
+        // Construct result
+        int resultSize = list.size();
+        if (limit == 0) {
+            while (resultSize > 0 && list.get(resultSize - 1).length() == 0) {
+                resultSize--;
+            }
+        }
+        String[] result = new String[resultSize];
+        return list.subList(0, resultSize).toArray(result);
+    }
+    return Pattern.compile(regex).split(this, limit);
+}
+```
 
 
 
