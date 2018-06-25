@@ -47,6 +47,7 @@ public class WebSocketServer {
         if (null != Integer.getInteger("netty.server.childgroup.size")) {
             childThreadGroupSize = Integer.getInteger("netty.server.childgroup.size");
         }
+        LOG.info(String.format("主线程组大小：%s 副线程组大小：%s", parentThreadGroupSize, childThreadGroupSize));
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(parentThreadGroupSize);
         EventLoopGroup workerGroup = new NioEventLoopGroup(childThreadGroupSize);
