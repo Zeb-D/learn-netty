@@ -10,7 +10,7 @@
 
 本次是基于netty4，netty每个大版本变化比较大，如果不深入分析代码，很可能导致以前代码会出问题，如netty3升级到netty4，对缓冲的处理方式不一样（netty4回收线程只能是当前线程回收，切换其它线程后就会失效，具体可以看EventLoop实现），可能会报内存溢出 等等；
 
-另外附上个人java测试server的client代码，也上传tcp测试工具，在review/tool下的sockettool.exe。
+另外附上个人java测试server的client代码，也上传tcp测试工具，在https://github.com/Zeb-D/my-review/tree/master/tool 下的sockettool.exe。
 
 
 
