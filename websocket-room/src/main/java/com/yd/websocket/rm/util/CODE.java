@@ -1,4 +1,4 @@
-package com.rm.util;
+package com.yd.websocket.rm.util;
 
 /**
  * 统一消息码

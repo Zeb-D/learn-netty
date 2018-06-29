@@ -48,7 +48,7 @@
                     <appendAssemblyId>false</appendAssemblyId><!--自定义后缀名称 -->
                     <archive>
                         <manifest>
-                            <mainClass>com.rm.server.WebSocketServer</mainClass>
+                            <mainClass>com.yd.websocket.rm.server.WebSocketServer</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -76,7 +76,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.rm.server.WebSocketServer</mainClass>
+                            <mainClass>com.yd.websocket.rm.server.WebSocketServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

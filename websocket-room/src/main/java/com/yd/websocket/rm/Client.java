@@ -1,4 +1,4 @@
-package com.rm;
+package com.yd.websocket.rm;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

@@ -1,4 +1,4 @@
-package com.rm.util;
+package com.yd.websocket.rm.util;
 
 /**
  * @author Yd on  2018-06-25

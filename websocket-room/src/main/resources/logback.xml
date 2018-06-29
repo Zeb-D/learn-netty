@@ -4,7 +4,7 @@
     <appender name="alllog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Append>true</Append>
         <Encoding>UTF-8</Encoding>
-        <File>/data/javalog/distributedid.yd.com.log</File>
+        <File>/data/javalog/websocket.yd.com.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/data/javalog/websocket.yd.com.log.%d{yyyy-MM-dd}</fileNamePattern>
             <maxHistory>30</maxHistory>

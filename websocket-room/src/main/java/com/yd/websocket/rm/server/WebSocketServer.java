@@ -1,4 +1,4 @@
-package com.rm.server;
+package com.yd.websocket.rm.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -24,7 +24,7 @@ public class WebSocketServer {
         }
     }
 
-    //java  -cp -Dnetty.server.parentgroup.size=2 -Dnetty.server.childgroup.size=4    -Dfile.encoding=UTF-8  com.rm.server.WebSocketServer 7120
+    //java  -cp -Dnetty.server.parentgroup.size=2 -Dnetty.server.childgroup.size=4    -Dfile.encoding=UTF-8  WebSocketServer 7120
     public static void main(String[] args) {
 //        PropertyConfigurator.configure(System.getProperty("conf.dir") + "/log4j.properties");
         if ((args == null) || (args.length == 0)) {

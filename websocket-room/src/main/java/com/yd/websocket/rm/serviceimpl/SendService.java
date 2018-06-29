@@ -1,6 +1,6 @@
-package com.rm.serviceimpl;
+package com.yd.websocket.rm.serviceimpl;
 
-import com.rm.util.StringUtil;
+import com.yd.websocket.rm.util.StringUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -12,9 +12,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.rm.service.SendCallBack;
-import com.rm.util.Request;
-import com.rm.util.UuidGem;
+import com.yd.websocket.rm.service.SendCallBack;
+import com.yd.websocket.rm.util.Request;
+import com.yd.websocket.rm.util.UuidGem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

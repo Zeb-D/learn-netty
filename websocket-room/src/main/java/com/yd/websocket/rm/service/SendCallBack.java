@@ -1,6 +1,6 @@
-package com.rm.service;
+package com.yd.websocket.rm.service;
 
-import com.rm.util.Request;
+import com.yd.websocket.rm.util.Request;
 
 import io.netty.channel.ChannelHandlerContext;
 
